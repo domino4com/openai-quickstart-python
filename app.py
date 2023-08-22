@@ -6,13 +6,11 @@ from json import loads
 
 app = Flask(__name__)
 openai.api_key = os.getenv("OPENAI_API_KEY")
-
 app.config["MQTT_BROKER_URL"] = "mqtt.24mm2.com"
 app.config["MQTT_BROKER_PORT"] = 1883
 app.config["MQTT_KEEPALIVE"] = 5  # Set KeepAlive time in seconds
 app.config["MQTT_TLS_ENABLED"] = False  # If your server supports TLS, set it True
 topic = os.getenv("TOPIC")
-
 mqtt_client = Mqtt(app)
 sensor_data = ""
 
@@ -26,7 +24,7 @@ def index():
             messages=[
                 {
                     "role": "system",
-                    "content": "You are a helful assistant that helps with sensor data as provided (in standard metric units). You can assist with calculating other values based on the sensor data. You can put the sensor data into context.",
+                    "content": "You are a helful assistant that helps with sensor data as provided (temperatures all in ºC, humidity in %RH, light in lux and cloud base in meters). You can assist with calculating other values based on the sensor data. You can put the sensor data into context.",
                 },
                 {"role": "user", "content": domino4},
                 {"role": "assistant", "content": sensor_data},
@@ -35,7 +33,6 @@ def index():
         return redirect(
             url_for("index", result=response["choices"][0]["message"]["content"])
         )
-
     result = request.args.get("result")
     return render_template("index.html", result=result)
 
