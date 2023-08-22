@@ -12,17 +12,13 @@ app.config["MQTT_BROKER_PORT"] = 1883
 app.config["MQTT_KEEPALIVE"] = 5  # Set KeepAlive time in seconds
 app.config["MQTT_TLS_ENABLED"] = False  # If your server supports TLS, set it True
 topic = os.getenv("TOPIC")
-# print(topic)
-# exit()
 
 mqtt_client = Mqtt(app)
 sensor_data = ""
 
-
 @app.route("/", methods=("GET", "POST"))
 def index():
     if request.method == "POST":
-        # print("%s %s" % (msg.topic, msg.payload))
         domino4 = request.form["domino4"]
         response = openai.ChatCompletion.create(
             model="gpt-3.5-turbo",
@@ -30,9 +26,9 @@ def index():
             messages=[
                 {
                     "role": "system",
-                    "content": "You are a helful assistant that helps with sensor data as provided. You can assist with calculating other values based on the sensor data. You can put the sensor data into context.",
+                    "content": "You are a helful assistant that helps with sensor data as provided (in standard metric units). You can assist with calculating other values based on the sensor data. You can put the sensor data into context.",
                 },
-                {"role": "user", "content": generate_prompt(domino4)},
+                {"role": "user", "content": domino4},
                 {"role": "assistant", "content": sensor_data},
             ],
         )
@@ -43,22 +39,13 @@ def index():
     result = request.args.get("result")
     return render_template("index.html", result=result)
 
-
-def generate_prompt(domino4):
-    pmt = f"Based on this info: {sensor_data} (All in standard expected metric values), can you answer this: {domino4.capitalize()}"
-    print(pmt)
-    # return pmt
-    return domino4.capitalize()
-
-
 @mqtt_client.on_connect()
 def handle_connect(client, userdata, flags, rc):
     if rc == 0:
         print("Connected successfully")
-        mqtt_client.subscribe(topic)  # subscribe topic
+        mqtt_client.subscribe(topic)
     else:
         print("Bad connection. Code:", rc)
-
 
 @mqtt_client.on_message()
 def handle_mqtt_message(client, userdata, message):
