@@ -27,7 +27,8 @@ body {
   padding-top: 60px;
 }
 .icon {
-  width: 34px;
+/*   width: 100%; */
+    width: 200px;
 }
 h3 {
   font-size: 32px;
@@ -63,4 +64,5 @@ input[type="submit"] {
 .result {
   font-weight: bold;
   margin-top: 40px;
+  width: 320px;
 }

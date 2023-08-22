@@ -1,19 +1,27 @@
 <!DOCTYPE html>
+
 <head>
-  <title>OpenAI Quickstart</title>
-  <link
-    rel="shortcut icon"
-    href="{{ url_for('static', filename='dog.png') }}"
-  />
+  <title>Sensor Chat</title>
+  <link rel="shortcut icon" href="{{ url_for('static', filename='logo.png') }}" />
   <link rel="stylesheet" href="{{ url_for('static', filename='main.css') }}" />
 </head>
 
+<script>
+  var input = document.getElementById("domino4");
+  input.addEventListener("keypress", function (event) {
+    if (event.key === "Enter") {
+      event.preventDefault();
+      document.getElementById("tellme").click();
+    }
+  });
+</script>
+
 <body>
-  <img src="{{ url_for('static', filename='dog.png') }}" class="icon" />
-  <h3>Name my pet</h3>
+  <img src="{{ url_for('static', filename='logo.png') }}" class="icon" />
+  <h3>Sensor Chat</h3>
   <form action="/" method="post">
-    <input type="text" name="animal" placeholder="Enter an animal" required />
-    <input type="submit" value="Generate names" />
+    <input type="text" name="domino4" placeholder="Chat with your sensors" required />
+    <input type="submit" name="tellme" value="Tell me!" />
   </form>
   {% if result %}
   <div class="result">{{ result }}</div>
